@@ -18,14 +18,15 @@ def main():
         elif choice == 2:
             available = [book for book in books['available']]
             display_books(available, "Available Books")
-        elif choice == "3":
+        elif choice == 3:
             display_books(borrowed_books, "Boorowed Books")
-        elif choice == "4":
+        elif choice == 4:
             overdue = get_overdue_books()
             display_books(overdue, "OverDue Books")
-        elif choice == "5":
+        elif choice == 5:
             isbn = input("Enter the ISBN of the book you want to borrow: ")
             borrower = input("Enter your name: ")
+            borrower_email = input("Enter you email: ")
             days = input("Enter loan period in days (default 14 days): ")
             try:
                 days = int(days) if days else 14
@@ -33,10 +34,10 @@ def main():
                 print("Invalid input. Using the default 14 days.")
                 days = 14
             borrow_book(isbn, borrower, days)
-        elif choice == "6":
+        elif choice == 6:
             isbn = input("Enter the ISBN of the book you want to return: ")
-            return(isbn)
-        elif choice == "7":
+            return_book(isbn)
+        elif choice == 7:
             title = input("Enter book title: ")
             author = input("Enter Author name: ")
             isbn = input("Enter ISBN: ")
@@ -44,7 +45,7 @@ def main():
                 print("A Book with the isbn already exist!")
             else:
                 add_book(title, author, isbn)
-        elif choice == "8":
+        elif choice == 8:
             print("Thanks for using the Library Management System.")
             break
         else:
@@ -67,10 +68,10 @@ def find_book(isbn=None, title=None):
     for book in books:
         if (isbn and book['isbn'] == isbn) or (title and book['title'].lower() == title.lower()):
             return book
-        return None
+    return None
     
 
-def borrow_book(isbn, borrower_name, loan_period_days=14):
+def borrow_book(isbn, borrower_name, borrower_email, loan_period_days=14):
     """Borrow a book from the library."""
     book = find_book(isbn=isbn)
 
@@ -83,10 +84,10 @@ def borrow_book(isbn, borrower_name, loan_period_days=14):
         return False
     
     book['available'] = False
-    book['borrower'] = borrower_name
+    book['borrower'] = {"Name": borrower_name, "email": borrower_email}
     book['due_date'] = datetime.now() + timedelta(days=loan_period_days)
     borrowed_books.append(book)
-    print(f"Book '{book['title']}' borrowed successfully! Due date: {book['due_date'].strftime('%Y-%M-%d')}")
+    print(f"Book '{book['title']}' borrowed successfully! Due date: {book['due_date'].strftime('%Y-%m-%d')}")
     return True
 
 
@@ -125,10 +126,10 @@ def display_books(book_list, title):
     
     for book in book_list:
         status = f"Title: {book['title']}, Author: {book['author']}, ISBN: {book['isbn']}"
-        if book.get('avalable', True):
+        if book.get('available', True):
             status += ", Status: Available"
         else:
-            status += f", Status: Borrowed by {book['borrower']}, Due Date: {book['due_date'].strftime('%Y-%M-%d')}"
+            status += f", Status: Borrowed by {book['borrower']}, Due Date: {book['due_date'].strftime('%Y-%m-%d')}"
         print(status)
 
 
@@ -138,6 +139,7 @@ def get_overdue_books():
     for book in borrowed_books:
         if book['due_date'] < datetime.now():
             overdue.append(book)
+            status += " (Overdue!)"
     return overdue
 
 """
