@@ -16,7 +16,7 @@ def main():
         if choice == 1:
             display_books(books, "All books in the Library")
         elif choice == 2:
-            available = [book for book in books['available']]
+            available = [book for book in books if book.get("availabe", True)]
             display_books(available, "Available Books")
         elif choice == 3:
             display_books(borrowed_books, "Boorowed Books")
