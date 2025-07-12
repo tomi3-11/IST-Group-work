@@ -11,12 +11,12 @@ def main():
 
     while True:
         display_menu()
-        choice = int(input("Enter your Choice (1 - 8): "))
+        choice = input("Enter your Choice (1 - 8): ")
 
-        if choice == 1:
+        if choice == "1":
             display_books(books, "All books in the Library")
-        elif choice == 2:
-            available = [book for book in books['available']]
+        elif choice == "2":
+            available = [book for book in books if book['available']]
             display_books(available, "Available Books")
         elif choice == "3":
             display_books(borrowed_books, "Boorowed Books")
@@ -35,7 +35,7 @@ def main():
             borrow_book(isbn, borrower, days)
         elif choice == "6":
             isbn = input("Enter the ISBN of the book you want to return: ")
-            return(isbn)
+            return_book(isbn)
         elif choice == "7":
             title = input("Enter book title: ")
             author = input("Enter Author name: ")
@@ -67,7 +67,7 @@ def find_book(isbn=None, title=None):
     for book in books:
         if (isbn and book['isbn'] == isbn) or (title and book['title'].lower() == title.lower()):
             return book
-        return None
+    return None
     
 
 def borrow_book(isbn, borrower_name, loan_period_days=14):
@@ -86,7 +86,7 @@ def borrow_book(isbn, borrower_name, loan_period_days=14):
     book['borrower'] = borrower_name
     book['due_date'] = datetime.now() + timedelta(days=loan_period_days)
     borrowed_books.append(book)
-    print(f"Book '{book['title']}' borrowed successfully! Due date: {book['due_date'].strftime('%Y-%M-%d')}")
+    print(f"Book '{book['title']}' borrowed successfully! Due date: {book['due_date'].strftime('%Y-%m-%d')}")
     return True
 
 
@@ -125,10 +125,10 @@ def display_books(book_list, title):
     
     for book in book_list:
         status = f"Title: {book['title']}, Author: {book['author']}, ISBN: {book['isbn']}"
-        if book.get('avalable', True):
+        if book.get('available', True):
             status += ", Status: Available"
         else:
-            status += f", Status: Borrowed by {book['borrower']}, Due Date: {book['due_date'].strftime('%Y-%M-%d')}"
+            status += f", Status: Borrowed by {book['borrower']}, Due Date: {book['due_date'].strftime('%Y-%m-%d')}"
         print(status)
 
 
