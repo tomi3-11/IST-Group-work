@@ -11,24 +11,19 @@ def main():
 
     while True:
         display_menu()
-        choice = input("Enter your Choice (1 - 8): ")
+        choice = input("Enter your Choice (1 - 8): ").strip()
 
         if choice == "1":
             display_books(books, "All books in the Library")
-<<<<<<< HEAD
         elif choice == "2":
             available = [book for book in books if book['available']]
-=======
-        elif choice == 2:
-            available = [book for book in books if book.get("availabe", True)]
->>>>>>> de63c132d0fdbac8039db0b703cca486758f0cf8
             display_books(available, "Available Books")
-        elif choice == 3:
+        elif choice == "3":
             display_books(borrowed_books, "Boorowed Books")
-        elif choice == 4:
+        elif choice == "4":
             overdue = get_overdue_books()
             display_books(overdue, "OverDue Books")
-        elif choice == 5:
+        elif choice == "5":
             isbn = input("Enter the ISBN of the book you want to borrow: ")
             borrower = input("Enter your name: ")
             borrower_email = input("Enter you email: ")
@@ -38,15 +33,11 @@ def main():
             except ValueError:
                 print("Invalid input. Using the default 14 days.")
                 days = 14
-            borrow_book(isbn, borrower, days)
-        elif choice == 6:
+            borrow_book(isbn, borrower, borrower_email, days)
+        elif choice == "6":
             isbn = input("Enter the ISBN of the book you want to return: ")
             return_book(isbn)
-<<<<<<< HEAD
         elif choice == "7":
-=======
-        elif choice == 7:
->>>>>>> de63c132d0fdbac8039db0b703cca486758f0cf8
             title = input("Enter book title: ")
             author = input("Enter Author name: ")
             isbn = input("Enter ISBN: ")
@@ -54,7 +45,7 @@ def main():
                 print("A Book with the isbn already exist!")
             else:
                 add_book(title, author, isbn)
-        elif choice == 8:
+        elif choice == "8":
             print("Thanks for using the Library Management System.")
             break
         else:
@@ -138,7 +129,11 @@ def display_books(book_list, title):
         if book.get('available', True):
             status += ", Status: Available"
         else:
+            borrower = book.get('borrower', {})
+            borrower_info = f"{borrower.get("Name", 'Unknown')} ({borrower.get("email", "N/A")})"
             status += f", Status: Borrowed by {book['borrower']}, Due Date: {book['due_date'].strftime('%Y-%m-%d')}"
+            if book['due_date'] < datetime.now():
+                status += " (Overdue!)"
         print(status)
 
 
